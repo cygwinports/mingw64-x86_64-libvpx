@@ -1,0 +1,41 @@
+CROSS_HOST="x86_64-w64-mingw32"
+inherit cross
+
+NAME="mingw64-x86_64-libvpx"
+VERSION=1.1.0
+RELEASE=1
+CATEGORY="Devel"
+SUMMARY="WebM VP8 video codec for Win64 toolchain"
+DESCRIPTION="WebM is an open, royalty-free, media file format designed for
+the web. WebM defines the file container structure, video and audio formats.
+WebM files consist of video streams compressed with the VP8 video codec and
+audio streams compressed with the Vorbis audio codec. The WebM file structure
+is based on the Matroska container."
+HOMEPAGE="http://www.webmproject.org/"
+SRC_URI="http://webm.googlecode.com/files/libvpx-v${VERSION}.tar.bz2"
+SRC_DIR="libvpx-v${VERSION}"
+PATCH_URI="1.1.0-winpthreads.patch"
+
+src_compile() {
+	cd ${B}
+	export CC AR LD=${CC}
+	${S}/configure \
+		--prefix=${CROSS_PREFIX} \
+		--target=x86_64-win64-gcc \
+		--disable-install-bins \
+		--disable-install-docs \
+		--disable-install-srcs \
+		|| error "configure failed"
+	cygmake
+
+	${CC} -shared -o libvpx-1.dll -Wl,--out-implib,libvpx.dll.a \
+		-Wl,--whole-archive,libvpx.a,--no-whole-archive -lpthread \
+		|| error "shared library build failed"
+}
+
+src_install() {
+	cd ${B}
+	cyginstall
+	dobin *.dll
+	dolib libvpx.dll.a
+}
