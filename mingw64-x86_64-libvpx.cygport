@@ -2,7 +2,7 @@ CROSS_HOST="x86_64-w64-mingw32"
 inherit cross
 
 NAME="mingw64-x86_64-libvpx"
-VERSION=1.1.0
+VERSION=1.3.0
 RELEASE=1
 CATEGORY="Devel"
 SUMMARY="WebM VP8 video codec for Win64 toolchain"
@@ -18,7 +18,7 @@ PATCH_URI="1.1.0-winpthreads.patch"
 
 src_compile() {
 	cd ${B}
-	export CC AR LD=${CC}
+	export CC AR LD=${CC} STRIP=:
 	${S}/configure \
 		--prefix=${CROSS_PREFIX} \
 		--target=x86_64-win64-gcc \

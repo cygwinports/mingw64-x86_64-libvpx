@@ -1,11 +1,13 @@
---- origsrc/libvpx-v1.1.0/examples.mk	2012-05-08 18:14:00.000000000 -0500
-+++ src/libvpx-v1.1.0/examples.mk	2013-11-20 05:03:38.120613300 -0600
-@@ -114,7 +114,7 @@ vp8_multi_resolution_encoder.DESCRIPTION
+--- origsrc/libvpx-v1.3.0/examples.mk
++++ src/libvpx-v1.3.0/examples.mk
+@@ -114,8 +114,8 @@ vp8_multi_resolution_encoder.DESCRIPTION
  # We should not link to math library (libm) on RVCT
  # when building for bare-metal targets
  ifeq ($(CONFIG_OS_SUPPORT), yes)
 -CODEC_EXTRA_LIBS-$(CONFIG_VP8)         += m
+-CODEC_EXTRA_LIBS-$(CONFIG_VP9)         += m
 +CODEC_EXTRA_LIBS-$(CONFIG_VP8)         += m pthread
++CODEC_EXTRA_LIBS-$(CONFIG_VP9)         += m pthread
  else
      ifeq ($(CONFIG_GCC), yes)
      CODEC_EXTRA_LIBS-$(CONFIG_VP8)         += m
