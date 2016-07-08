@@ -2,7 +2,7 @@ CROSS_HOST="x86_64-w64-mingw32"
 inherit cross
 
 NAME="mingw64-x86_64-libvpx"
-VERSION=1.3.0
+VERSION=1.5.0
 RELEASE=1
 CATEGORY="Devel"
 SUMMARY="WebM VP8 video codec for Win64 toolchain"
@@ -12,8 +12,8 @@ WebM files consist of video streams compressed with the VP8 video codec and
 audio streams compressed with the Vorbis audio codec. The WebM file structure
 is based on the Matroska container."
 HOMEPAGE="http://www.webmproject.org/"
-SRC_URI="http://webm.googlecode.com/files/libvpx-v${VERSION}.tar.bz2"
-SRC_DIR="libvpx-v${VERSION}"
+SRC_URI="http://downloads.webmproject.org/releases/webm/libvpx-${VERSION}.tar.bz2"
+SRC_DIR="libvpx-${VERSION}"
 PATCH_URI="1.1.0-winpthreads.patch"
 
 src_compile() {
@@ -21,14 +21,18 @@ src_compile() {
 	export CC AR LD=${CC} STRIP=:
 	${S}/configure \
 		--prefix=${CROSS_PREFIX} \
+		--enable-vp9-decoder --enable-vp9-encoder \
+		--enable-vp10-decoder --enable-vp10-encoder \
+		--enable-experimental --enable-spatial-svc \
 		--target=x86_64-win64-gcc \
+		--size-limit=16384x16384 \
 		--disable-install-bins \
 		--disable-install-docs \
 		--disable-install-srcs \
 		|| error "configure failed"
 	cygmake
 
-	${CC} -shared -o libvpx-1.dll -Wl,--out-implib,libvpx.dll.a \
+	${CC} -shared -o libvpx-3.dll -Wl,--out-implib,libvpx.dll.a \
 		-Wl,--whole-archive,libvpx.a,--no-whole-archive -lpthread \
 		|| error "shared library build failed"
 }
