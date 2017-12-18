@@ -2,7 +2,7 @@ CROSS_HOST="x86_64-w64-mingw32"
 inherit cross
 
 NAME="mingw64-x86_64-libvpx"
-VERSION=1.5.0
+VERSION=1.6.1
 RELEASE=1
 CATEGORY="Devel"
 SUMMARY="WebM VP8 video codec for Win64 toolchain"
@@ -22,7 +22,7 @@ src_compile() {
 	${S}/configure \
 		--prefix=${CROSS_PREFIX} \
 		--enable-vp9-decoder --enable-vp9-encoder \
-		--enable-vp10-decoder --enable-vp10-encoder \
+		--enable-vp9-highbitdepth \
 		--enable-experimental --enable-spatial-svc \
 		--target=x86_64-win64-gcc \
 		--size-limit=16384x16384 \
@@ -32,7 +32,7 @@ src_compile() {
 		|| error "configure failed"
 	cygmake
 
-	${CC} -shared -o libvpx-3.dll -Wl,--out-implib,libvpx.dll.a \
+	${CC} -shared -o libvpx-4.dll -Wl,--out-implib,libvpx.dll.a \
 		-Wl,--whole-archive,libvpx.a,--no-whole-archive -lpthread \
 		|| error "shared library build failed"
 }
